@@ -35,7 +35,7 @@ The application will enable the execution of the following functions:
 A page to generate an HMAC digest: 
 https://www.devglan.com/online-tools/hmac-sha256-online
 
-#Aplication Diagrams
+# Aplication Diagrams
 Architecture Diagram
 ![Diagrams](./Diagrams/Architecture.png)
 
