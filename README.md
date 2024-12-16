@@ -37,10 +37,10 @@ https://www.devglan.com/online-tools/hmac-sha256-online
 
 #Aplication Diagrams
 Architecture Diagram
-(./Diagrams/Architecture.png)
+![Diagrams](./Diagrams/Architecture.png)
 
 Case (Transfer Player)
-(./Diagrams/Case1_transferPlayer.png)
+![Diagrams](./Diagrams/Case1_transferPlayer.png)
 
 
 
