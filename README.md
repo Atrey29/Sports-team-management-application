@@ -36,10 +36,10 @@ A page to generate an HMAC digest:
 https://www.devglan.com/online-tools/hmac-sha256-online
 
 # Aplication Diagrams
-Architecture Diagram
+# Architecture Diagram
 ![Diagrams](./Diagrams/Architecture.png)
 
-Case (Transfer Player)
+# Case (Transfer Player)
 ![Diagrams](./Diagrams/Case1_transferPlayer.png)
 
 
