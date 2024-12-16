@@ -1,0 +1,750 @@
+openapi: 3.0.0
+info:
+  title: PlayerCRUD
+  version: '1.0'
+  contact:
+    email: hk39513@zut.edu.pl
+  license:
+    name: MIT
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  /players:
+    parameters: []
+    get:
+      summary: Get all players info.
+      tags: []
+      responses:
+        '200':
+          description: ''
+          headers:
+            Data-time:
+              schema:
+                type: string
+                example: '2017-07-21T17:32:28Z'
+              description: data-time of response
+            Id:
+              schema:
+                type: string
+                example: 123e4567-e89b-42d3-a456-5566424488888
+              description: id of response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerListResponse'
+              examples:
+                Example no. 1:
+                  value:
+                    responseHeader:
+                      requestId: 3e6ef8c7-8f20-4095-aabf-890295695452
+                      sendDate: "2022-01-16T19:58:06.460+00:00"
+                    usersList:
+                      player1:
+                        id: 123e4567-e89b-42d3-a456-556642440000
+                        firstName: Kamil
+                        lastName: Grosicki
+                        age: 23
+                        height: 180
+                        nationality: PL
+                        position: ST
+                        goalsCount: 10
+                        assistCount: 7
+                        yellowCardCount: 3
+                        redCardCount: 1
+                        teamId: 97874567-e89b-42d3-a456-556642440000
+                      player2:
+                        id: 123e4567-e89b-42d3-a456-5566424424110
+                        firstName: Artur
+                        lastName: Boruc
+                        age: 40
+                        height: 180
+                        nationality: PL
+                        position: ST
+                        goalsCount: 10
+                        assistCount: 7
+                        yellowCardCount: 3
+                        redCardCount: 1
+                        teamId: 97874567-e89b-42d3-a456-556642440000
+                      
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal Server Error. Repository is empty
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      operationId: get-users-userId
+      description: Retrieve the information about every player in database.
+      parameters:
+        - schema:
+            type: string
+            format: date-time
+            example: '2017-07-21T17:32:28Z'
+          in: header
+          name: Data-time
+          description: data-time of request
+        - schema:
+            type: string
+            format: int64
+            example: 123e4567-e89b-42d3-a456-5566424488888
+          in: header
+          name: Id
+          description: id of request
+  '/player/{playerID}':
+    parameters:
+      - schema:
+          type: string
+          example: 123e4567-e89b-42d3-a456-556642440000
+        name: playerID
+        in: path
+        description: Id of the player
+        required: true
+    get:
+      summary: Get player info by ID.
+      tags: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Data-time:
+              schema:
+                type: string
+                example: '2017-07-21T17:32:28Z'
+              description: data-time of response
+            Id:
+              schema:
+                type: string
+                example: 123e4567-e89b-42d3-a456-5566424488888
+              description: id of response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerResponse'
+              examples:
+                Get 123e4567-e89b-42d3-a456-556642440000:
+                   value:
+                    responseHeader:
+                      requestId: a342f5e6-7346-4829-8bb2-4bcc2cee4789
+                      sendDate: 2020-11-17T12:08:56.235-0100
+                    player:
+                      id: 123e4567-e89b-42d3-a456-556642440000
+                      firstName: Kamil
+                      lastName: Grosicki
+                      age: 23
+                      height: 180
+                      nationality: PL
+                      position: ST
+                      goalsCount: 10
+                      assistCount: 7
+                      yellowCardCount: 3
+                      redCardCount: 1
+                      teamId: 97874567-e89b-42d3-a456-556642440000
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal Server Error. User doesn't exists.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      operationId: get-player-playerID
+      description: Get info about the player with the same ID as playerID.
+      parameters:
+        - schema:
+            type: string
+            example: '2017-07-21T17:32:28Z'
+          in: header
+          description: data-time of request
+          name: Data-time
+        - schema:
+            type: string
+            example: 123e4567-e89b-42d3-a456-5566424488888
+          in: header
+          description: id of request
+          name: Id
+    delete:
+      summary: Remove the player by playerID.
+      operationId: delete-player-playerID
+      responses:
+        '200':
+          description: OK
+          headers:
+            Data-time:
+              schema:
+                type: string
+                example: '2017-07-21T17:32:28Z'
+              description: Data-time of response
+            Id:
+              schema:
+                type: string
+                example: 123e4567-e89b-42d3-a456-5566424488888
+              description: Id of response
+        '401':
+          description: Unautohrized. Authentication failed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal Server Error. User doesn't exists.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      description: Delte the player with matching playerId.
+      security:
+        - basicAuth: []
+      parameters:
+        - schema:
+            type: string
+            example: '2017-07-21T17:32:28Z'
+          in: header
+          name: Data-time
+          description: Data-time of request
+        - schema:
+            type: string
+            example: 123e4567-e89b-42d3-a456-5566424488888
+          in: header
+          name: Id
+          description: Id of request
+  '/team/{teamID}':
+    parameters:
+      - schema:
+          type: string
+          example: 97874567-e89b-42d3-a456-556642440000
+        name: teamID
+        in: path
+        required: true
+        description: Id of the team.
+    get:
+      summary: Get players info by teamID.
+      tags: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Data-time:
+              schema:
+                type: string
+                example: '2017-07-21T17:32:28Z'
+              description: data-time of response
+            Id:
+              schema:
+                type: string
+                example: 123e4567-e89b-42d3-a456-5566424488888
+              description: id of response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerListResponse'
+              examples:
+                Get 97874567-e89b-42d3-a456-556642440000:
+                  value:
+                    responseHeader:
+                      requestId: 3e6ef8c7-8f20-4095-aabf-890295695452
+                      sendDate: "2022-01-16T19:58:06.460+00:00"
+                    usersList:
+                      player1:
+                        id: 123e4567-e89b-42d3-a456-556642440000
+                        firstName: Kamil
+                        lastName: Grosicki
+                        age: 23
+                        height: 180
+                        nationality: PL
+                        position: ST
+                        goalsCount: 10
+                        assistCount: 7
+                        yellowCardCount: 3
+                        redCardCount: 1
+                        teamId: 97874567-e89b-42d3-a456-556642440000
+                      player2:
+                        id: 123e4567-e89b-42d3-a456-5566424424110
+                        firstName: Sebastian
+                        lastName: Kowalczyk
+                        age: 23
+                        height: 165
+                        nationality: PL
+                        position: ST
+                        goalsCount: 10
+                        assistCount: 7
+                        yellowCardCount: 3
+                        redCardCount: 1
+                        teamId: 97874567-e89b-42d3-a456-556642440000
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal Server Error. Team doesn't exists.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      operationId: get-team-teamID
+      description: Get info about the players with the same team ID as teamID.
+      parameters:
+        - schema:
+            type: string
+            example: '2017-07-21T17:32:28Z'
+          in: header
+          description: data-time of request
+          name: Data-time
+        - schema:
+            type: string
+            example: 123e4567-e89b-42d3-a456-5566424488888
+          in: header
+          description: id of request
+          name: Id
+  /player:
+    post:
+      summary: Create a new player.
+      operationId: post-player
+      responses:
+        '200':
+          description: OK
+          headers:
+            Data-time:
+              schema:
+                type: string
+                example: '2017-07-21T17:32:28Z'
+              description: Data-time of response
+            Id:
+              schema:
+                type: string
+                example: 123e4567-e89b-42d3-a456-5566424488888
+              description: Id of response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerResponse'
+              examples:
+                Create Kamil Grosicki:
+                  value:
+                    responseHeader:
+                      requestId: a342f5e6-7346-4829-8bb2-4bcc2cee4789
+                      sendDate: 2020-11-17T12:08:56.235-0100
+                    player:
+                      id: 123e4567-e89b-42d3-a456-556642440000
+                      firstName: Kamil
+                      lastName: Grosicki
+                      age: 23
+                      height: 180
+                      nationality: PL
+                      position: ST
+                      goalsCount: 10
+                      assistCount: 7
+                      yellowCardCount: 3
+                      redCardCount: 1
+                      teamId: 97874567-e89b-42d3-a456-556642440000
+        '401':
+          description: Unautohrized. Authentication failed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal Server Error. User already exists. HMAC verification failed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      description: Create a new player.
+      parameters:
+        - schema:
+            type: string
+            example: '2017-07-21T17:32:28Z'
+          in: header
+          name: Data-time
+          description: Data-time of request
+        - schema:
+            type: string
+            example: 123e4567-e89b-42d3-a456-5566424488888
+          in: header
+          name: Id
+          description: Id of request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlayerRequest'
+            examples:
+              Create Kamil Grosicki:
+                value:
+                 player:
+                  id: 123e4567-e89b-42d3-a456-556642440000
+                  firstName: Kamil
+                  lastName: Grosicki
+                  age: 23
+                  height: 180
+                  nationality: PL
+                  position: ST
+                  goalsCount: 10
+                  assistCount: 7
+                  yellowCardCount: 3
+                  redCardCount: 1
+                  teamId: 97874567-e89b-42d3-a456-556642440000
+      security:
+        - basicAuth: []
+  '/transferPlayer/{playerID}':
+    parameters:
+      - schema:
+          type: string
+          example: 123e4567-e89b-42d3-a456-556642440000
+        name: playerID
+        in: path
+        required: true
+        description: Id of the player
+    put:
+      security:
+        - basicAuth: []
+      summary: Transfer player with playerID to the new team.
+      operationId: put-updateUser-userID
+      responses:
+        '200':
+          description: OK
+          headers:
+            Data-time:
+              schema:
+                type: string
+                format: date-time
+                example: '2017-07-21T17:32:28Z'
+              description: Data-time of response
+            Id:
+              schema:
+                type: string
+                example: 123e4567-e89b-42d3-a456-5566424488888
+              description: Id of response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerResponse'
+              examples:
+                Transfer Kamil Grosicki:
+                  value:
+                    responseHeader:
+                      requestId: 6831f0d6-e5a9-42a4-8d8e-fc8832fb7f01
+                      sendDate: '2022-01-16T20:00:11.346+00:00'
+                    player:
+                      id: 123e4567-e89b-42d3-a456-556642440000
+                      firstName: Kamil
+                      lastName: Grosicki
+                      age: 23
+                      height: 180
+                      nationality: PL
+                      position: ST
+                      goalsCount: 10
+                      assistCount: 7
+                      yellowCardCount: 3
+                      redCardCount: 1
+                      teamId: 97874567-e89b-42d3-a456-556642440001
+        '401':
+          description: Unautohrized. Authentication failed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal Server Error. Player or Team doesn't exists.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      description: Transfer player to the new team.
+      parameters:
+        - schema:
+            type: string
+            example: '2017-07-21T17:32:28Z'
+            format: date-time
+          in: header
+          description: data-time of request
+          name: Data-time
+        - schema:
+            type: string
+            format: int64
+            example: 123e4567-e89b-42d3-a456-5566424488888
+          in: header
+          name: id
+          description: id of request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequest'
+            examples:
+              Transfer to Legia Warszawa:
+                value:
+                  teamId: 97874567-e89b-42d3-a456-556642440001
+  /teams:
+    parameters: []
+    get:
+      summary: Get all teams info.
+      tags: []
+      responses:
+        '200':
+          description: ''
+          headers:
+            Data-time:
+              schema:
+                type: string
+                example: '2017-07-21T17:32:28Z'
+              description: data-time of response
+            Id:
+              schema:
+                type: string
+                example: 123e4567-e89b-42d3-a456-5566424488888
+              description: id of response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamsListResponse'
+              examples:
+                Example no. 1:
+                  value:
+                    responseHeader:
+                      requestId: 6831f0d6-e5a9-42a4-8d8e-fc8832fb7f01
+                      sendDate: '2022-01-16T20:00:11.346+00:00'
+                    teamsList:
+                      team1:
+                        id: 123e4567-e89b-42d3-a456-556642440000
+                        name: Pogon Szczecin
+                      team2:
+                        id: bd455cac-7245-44fd-8d50-8223fbced82b
+                        name: Legia Warszawa
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal Server Error. Repository is empty.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      operationId: get-teams
+      description: Retrieve the information about every team in database.
+      parameters:
+        - schema:
+            type: string
+            format: date-time
+            example: '2017-07-21T17:32:28Z'
+          in: header
+          name: Data-time
+          description: data-time of request
+        - schema:
+            type: string
+            format: int64
+            example: 123e4567-e89b-42d3-a456-5566424488888
+          in: header
+          name: Id
+          description: id of request
+  
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    Player:
+      title: Player
+      type: object
+      description: ''
+      x-examples:
+        Kamil Grosicki:
+          id: 123e4567-e89b-42d3-a456-556642440000
+          firstName: Kamil
+          lastName: Grosicki
+          age: 23
+          height: 180
+          nationality: PL
+          position: ST
+          goalsCount: 10
+          assistCount: 7
+          yellowCardCount: 3
+          redCardCount: 1
+          teamId: 97874567-e89b-42d3-a456-556642440000
+      properties:
+        id:
+          type: string
+          example: 123e4567-e89b-42d3-a456-556642440000
+        firstName:
+          type: string
+          pattern: '^[A-Za-z]+'
+          example: Kamil
+        lastName:
+          type: string
+          pattern: '^[A-Za-z]+'
+          example: Grosicki
+        age:
+          type: integer
+          maximum: 99
+          minimum: 1
+          example: 23
+        height:
+          type: integer
+          minimum: 0
+          maximum: 243
+          example: 180
+        nationality:
+          type: string
+          example: PL
+        position:
+          $ref: '#/components/schemas/Position'
+        goalsCount:
+          type: integer
+          example: 10
+        assistCount:
+          type: integer
+          example: 7
+        yellowCardCount:
+          type: integer
+          example: 3
+        redCardCount:
+          type: integer
+          example: 1
+        teamId:
+          type: string
+          example: 123e4567-e89b-42d3-a456-556642440001
+    Position:
+      title: Position
+      type: object
+      properties:
+        position:
+          type: string
+          enum:
+            - GK
+            - RB
+            - CB
+            - LB
+            - CMD
+            - CM
+            - CAM
+            - LM
+            - RM
+            - LW
+            - RW
+            - ST
+          example: ST
+    Team:
+      title: Team
+      type: object
+      properties:
+        id:
+          type: string
+          example: 97874567-e89b-42d3-a456-556642440000
+        name:
+          type: string
+          example: Pogon Szczecin
+    Error: 
+      title: Error
+      type: object
+      properties: 
+        responseHeader:
+          $ref: '#/components/schemas/ResponseHeader' 
+        code: 
+          type: string
+          example: UNAUTHORIZED
+        message:
+          type: string
+          example: Authentication failed 
+    ResponseHeader:
+      title: ResponseHeader
+      type: object
+      properties: 
+        responseId: 
+          type: string
+          format: uuid 
+        sendDate: 
+          type: string
+          format: date-time
+          example: 2020-11-17T12:08:56.235-0100 
+          description: Date format according to ISO_8601 for example yyyy-MM-dd'T'HH:mm:ss.SSSZ
+    RequestHeader:
+      title: RequestHeader
+      type: object 
+      properties: 
+        requestId: 
+          type: string
+          format: uuid 
+        sendDate: 
+          type: string
+          format: date-time
+          example: 2020-11-17T12:08:56.235-0100 
+          description: Date format according to ISO_8601 for example yyyy-MM-dd'T'HH:mm:ss.SSSZ
+    PlayerRequest:
+      title: PlayerRequest
+      type: object
+      properties: 
+        requestHeader:
+          $ref: "#/components/schemas/RequestHeader"
+        player: 
+          $ref: "#/components/schemas/Player" 
+    TransferRequest:
+      title: TransferRequest
+      type: object 
+      properties: 
+        requestHeader:
+          $ref: "#/components/schemas/RequestHeader"
+        teamId: 
+          type: string
+          example: 97874567-e89b-42d3-a456-556642440001
+    PlayerResponse:
+      title: PlayerResponse
+      type: object 
+      properties: 
+        responseHeader:
+          $ref: "#/components/schemas/ResponseHeader"
+        user: 
+          $ref: "#/components/schemas/Player"
+    PlayerListResponse:
+      title: PlayerListResponse
+      type: object 
+      properties: 
+        responseHeader:
+          $ref: "#/components/schemas/ResponseHeader"
+        playerList:
+          title: playerList
+          type: array
+          items: 
+            $ref: "#/components/schemas/Player"
+    TeamsListResponse:
+      title: TeamsListResponse
+      type: object 
+      properties: 
+        responseHeader:
+          $ref: "#/components/schemas/ResponseHeader"
+        teamsList:
+          title: teamsList
+          type: array
+          items: 
+            $ref: "#/components/schemas/Team"

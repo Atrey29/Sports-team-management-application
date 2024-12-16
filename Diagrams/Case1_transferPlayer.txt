@@ -1,0 +1,58 @@
+@startuml
+activate Client
+Client-> App: GET /players
+activate App
+App -> PlayersRepo: getAllPlayersData()
+activate PlayersRepo
+alt #green DB is not empty
+PlayersRepo-> App: PlayersData
+App -> Client: PlayersData
+else #tomato DB is empty
+PlayersRepo -> App: Empty collection
+deactivate PlayersRepo
+App -> Client: Error
+deactivate Client
+end
+deactivate App
+
+Client -> App: GET /teams
+activate Client
+activate App
+App-> TeamsRepo: getAllTeamsData()
+activate TeamsRepo
+alt #green DB is not empty
+TeamsRepo -> App: TeamsData
+App -> Client: TeamsData
+else #tomato DB is empty
+TeamsRepo -> App: Empty collection
+deactivate TeamsRepo
+App-> Client: Error
+deactivate Client
+end
+deactivate App
+
+Client -> App: PUT /transferPlayer/{playerId}
+activate Client
+activate App
+App-> CredentialsRepo: checkCredentials(clientCredentials)
+activate CredentialsRepo
+alt #green Authentication ok, transfer is possible
+CredentialsRepo -> App: Verification Ok
+App -> App: check if transfer is possible
+App -> PlayersRepo: transferPlayer(playerID, teamID)
+activate PlayersRepo
+PlayersRepo -> App: Confirmation
+deactivate PlayersRepo
+App -> Client: Confirmation
+else #orange Authentication ok but transfer not possible
+CredentialsRepo -> App: Verification Ok
+App -> App: check if transfer is possible
+App -> Client: Error
+else #tomato Authentication not ok
+CredentialsRepo  -> App: Verification not ok
+deactivate CredentialsRepo
+App -> Client: Error
+end
+deactivate App
+deactivate Client
+@enduml

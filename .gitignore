@@ -1,0 +1,7 @@
+.idea/
+openapi-spring.iml
+target/
+OUT/.openapi-generator-ignore
+OUT/.openapi-generator/
+OUT/README.md
+openapi-generator-cli.jar

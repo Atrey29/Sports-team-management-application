@@ -1,0 +1,19 @@
+TESTOWY PRZYPADEK UŻYCIA:
+
+1. Retrieve the list of all players. Note down the ID of the player you want to transfer to another club.
+
+curl --location --request GET 'https://pbaproject.herokuapp.com/players'
+
+2. Retrieve the list of all teams. Note down the ID of the team to which you want to transfer the player.
+
+curl --location --request GET 'https://pbaproject.herokuapp.com/teams'
+
+3. ransfer the selected player. Authorization is required using Basic Auth (username: admin, password: admin). Data verification is required using HMAC.
+
+curl --location --request PUT 'https://pbaproject.herokuapp.com/transferPlayer/1c0f1731-d827-4f84-a19e-31875fb5fe71' \
+--header 'X-HMAC-SIGNATURE: 1c1b95cca0112211b4d6488767aedc5d097a845f18f67ecda6698209409a69ba' \
+--header 'Authorization: Basic YWRtaW46YWRtaW4=' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "teamId": "bd455cac-7245-44fd-8d50-8223fbced82b"
+}'
